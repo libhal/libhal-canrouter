@@ -14,7 +14,7 @@
 
 #pragma once
 
-namespace hal::__device__ {
-class __device___replace_me
+namespace hal::canrouter {
+class canrouter_replace_me
 {};
-}  // namespace hal::__device__
+}  // namespace hal::canrouter
