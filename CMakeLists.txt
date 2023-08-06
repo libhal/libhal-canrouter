@@ -19,7 +19,7 @@ project(libhal-canrouter VERSION 0.0.1 LANGUAGES CXX)
 find_package(libhal REQUIRED CONFIG)
 find_package(libhal-util REQUIRED CONFIG)
 
-add_library(libhal-canrouter src/canrouter.cpp)
+add_library(libhal-canrouter src/can_router.cpp)
 
 target_include_directories(libhal-canrouter PUBLIC include)
 target_compile_features(libhal-canrouter PRIVATE cxx_std_20)

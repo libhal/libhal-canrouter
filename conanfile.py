@@ -16,7 +16,6 @@ from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 from conan.tools.files import copy
 from conan.tools.build import check_min_cppstd
-from conan.errors import ConanInvalidConfiguration
 import os
 
 
@@ -25,7 +24,7 @@ required_conan_version = ">=1.50.0"
 
 class libhal_canrouter_conan(ConanFile):
     name = "libhal-canrouter"
-    version = "0.0.1"
+    version = "1.0.0"
     license = "Apache-2.0"
     url = "https://github.com/conan-io/conan-center-index"
     homepage = "https://github.com/libhal/libhal-canrouter"
@@ -58,12 +57,12 @@ class libhal_canrouter_conan(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("libhal-cmake-util/1.0.0")
-        self.test_requires("libhal-mock/[^2.0.0]")
+        self.test_requires("libhal-mock/[^2.0.1]")
         self.test_requires("boost-ext-ut/1.1.9")
 
     def requirements(self):
         self.requires("libhal/[^2.0.0]")
-        self.requires("libhal-util/[^2.0.0]")
+        self.requires("libhal-util/[^3.0.0]")
 
     def layout(self):
         cmake_layout(self)

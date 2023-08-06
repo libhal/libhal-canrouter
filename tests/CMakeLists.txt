@@ -47,10 +47,10 @@ find_package(libhal-mock REQUIRED CONFIG)
 add_executable(${PROJECT_NAME}
 
   # Source files
-  ../src/canrouter.cpp
+  ../src/can_router.cpp
 
   # Test source files
-  canrouter.test.cpp
+  can_router.test.cpp
 
   # Main file for test
   main.test.cpp)

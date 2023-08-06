@@ -30,7 +30,7 @@ find_package(libhal-${platform_library} REQUIRED CONFIG)
 find_package(libhal-canrouter REQUIRED CONFIG)
 find_package(libhal-util REQUIRED CONFIG)
 
-set(DEMOS canrouter)
+set(DEMOS can_router)
 
 add_library(startup_code
     main.cpp

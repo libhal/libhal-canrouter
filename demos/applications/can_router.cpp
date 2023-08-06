@@ -12,9 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+#include <libhal-util/serial.hpp>
+#include <libhal-util/steady_clock.hpp>
 
-namespace hal::canrouter {
-class canrouter_replace_me
-{};
-}  // namespace hal::canrouter
+#include "../hardware_map.hpp"
+
+hal::status application(hardware_map& p_map)
+{
+  using namespace std::chrono_literals;
+  using namespace hal::literals;
+
+  auto& clock = *p_map.clock;
+  auto& console = *p_map.console;
+
+  hal::print(console, "Demo Application Starting...\n\n");
+
+  while (true) {
+    hal::delay(clock, 500ms);
+    hal::print(console, "Hello, world\n");
+    // TODO(#3): Actually use can router in this demo
+  }
+
+  return hal::success();
+}

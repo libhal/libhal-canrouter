@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace hal::canrouter {
-extern void canrouter_test();
-}  // namespace hal::canrouter
+namespace hal {
+extern void can_router_test();
+}  // namespace hal
 
 int main()
 {
-  hal::canrouter::canrouter_test();
+  hal::can_router_test();
 }

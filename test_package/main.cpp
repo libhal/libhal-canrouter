@@ -19,11 +19,13 @@
 #include <cstdlib>
 #include <exception>
 
-#include <libhal-canrouter/canrouter.hpp>
+#include <libhal-canrouter/can_router.hpp>
+#include <libhal-mock/can.hpp>
 
 int main()
 {
-  hal::canrouter::canrouter_replace_me bar;
+  hal::mock::can mock_can;
+  hal::can_router bar(mock_can);
 }
 
 namespace boost {

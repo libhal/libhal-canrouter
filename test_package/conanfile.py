@@ -24,6 +24,7 @@ class TestPackageConan(ConanFile):
 
     def requirements(self):
         self.requires(self.tested_reference_str)
+        self.requires("libhal-mock/[^2.0.1]")
 
     def layout(self):
         cmake_layout(self)
