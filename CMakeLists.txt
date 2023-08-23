@@ -14,23 +14,23 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(libhal-canrouter VERSION 0.0.1 LANGUAGES CXX)
+project(libhal-canrouter LANGUAGES CXX)
 
-find_package(libhal REQUIRED CONFIG)
-find_package(libhal-util REQUIRED CONFIG)
+libhal_test_and_make_library(
+  LIBRARY_NAME libhal-canrouter
 
-add_library(libhal-canrouter src/can_router.cpp)
+  SOURCES
+  src/can_router.cpp
 
-target_include_directories(libhal-canrouter PUBLIC include)
-target_compile_features(libhal-canrouter PRIVATE cxx_std_20)
-target_compile_options(libhal-canrouter PRIVATE -Wall -Wextra)
-target_link_libraries(libhal-canrouter PRIVATE
+  TEST_SOURCES
+  tests/can_router.test.cpp
+  tests/main.test.cpp
+
+  PACKAGES
+  libhal
+  libhal-util
+
+  LINK_LIBRARIES
   libhal::libhal
   libhal::util
 )
-
-if(NOT BUILD_TESTING STREQUAL OFF)
-  add_subdirectory(tests)
-endif()
-
-install(TARGETS libhal-canrouter)

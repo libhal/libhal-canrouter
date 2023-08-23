@@ -35,17 +35,17 @@ can_router::can_router(hal::can& p_can)
   (void)m_can->on_receive(std::ref((*this)));
 }
 
-can_router& can_router::operator=(can_router&& p_other)
+can_router& can_router::operator=(can_router&& p_other) noexcept
 {
   m_handlers = std::move(p_other.m_handlers);
-  m_can = std::move(p_other.m_can);
+  m_can = p_other.m_can;
   (void)m_can->on_receive(std::ref(*this));
 
   p_other.m_can = nullptr;
   return *this;
 }
 
-can_router::can_router(can_router&& p_other)
+can_router::can_router(can_router&& p_other) noexcept
 {
   *this = std::move(p_other);
 }
@@ -102,7 +102,7 @@ can_router::add_message_callback(hal::can::id_t p_id, message_handler p_handler)
 {
   return m_handlers.push_back(route{
     .id = p_id,
-    .handler = p_handler,
+    .handler = std::move(p_handler),
   });
 }
 

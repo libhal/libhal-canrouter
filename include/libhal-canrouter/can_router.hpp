@@ -50,8 +50,8 @@ public:
   can_router() = delete;
   can_router(can_router& p_other) = delete;
   can_router& operator=(can_router& p_other) = delete;
-  can_router& operator=(can_router&& p_other);
-  can_router(can_router&& p_other);
+  can_router& operator=(can_router&& p_other) noexcept;
+  can_router(can_router&& p_other) noexcept;
   ~can_router();
 
   /**
