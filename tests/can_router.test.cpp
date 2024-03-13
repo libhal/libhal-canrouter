@@ -17,6 +17,7 @@
 #include <algorithm>
 
 #include <libhal-util/can.hpp>
+#include <libhal/error.hpp>
 #include <libhal/functional.hpp>
 
 #include <boost/ut.hpp>
@@ -34,27 +35,24 @@ public:
   bool m_noop_set = false;
 
 private:
-  status driver_configure(const settings& p_settings) override
+  void driver_configure(const settings& p_settings) override
   {
     m_settings = p_settings;
     if (m_return_error_status) {
-      return hal::new_error();
+      return hal::safe_throw(hal::operation_not_supported(this));
     }
-    return success();
   };
 
-  status driver_bus_on() override
+  void driver_bus_on() override
   {
-    return success();
   }
 
-  result<send_t> driver_send(const message_t& p_message) override
+  void driver_send(const message_t& p_message) override
   {
     m_message = p_message;
     if (m_return_error_status) {
-      return hal::new_error();
+      return hal::safe_throw(hal::unknown(this));
     }
-    return send_t{};
   };
 
   void driver_on_receive(hal::callback<handler> p_handler) override
@@ -83,17 +81,6 @@ void can_router_test()
     expect(a != b);
   };
 
-  "can_router::create + update_callback()"_test = []() {
-    // Setup
-    mock_can mock;
-
-    // Exercise
-    auto router = can_router::create(mock);
-
-    // Verify
-    expect(bool{ router });
-  };
-
   "can_router::bus()"_test = []() {
     // Setup
     static constexpr can::message_t expected{
@@ -102,13 +89,12 @@ void can_router_test()
       .length = 3,
     };
     mock_can mock;
-    auto router = can_router::create(mock).value();
+    can_router router(mock);
 
     // Exercise
-    auto result = router.bus().send(expected);
+    router.bus().send(expected);
 
     // Verify
-    expect(bool{ result });
     expect(expected == mock.m_message);
   };
 
@@ -120,14 +106,13 @@ void can_router_test()
       .length = 3,
     };
     mock_can mock;
-    auto router = can_router::create(mock).value();
+    can_router router(mock);
     mock.m_return_error_status = true;
 
     // Exercise
-    auto result = router.bus().send(expected);
+    expect(throws<hal::unknown>([&]() { router.bus().send(expected); }));
 
     // Verify
-    expect(!bool{ result });
     expect(expected == mock.m_message);
   };
 
@@ -135,7 +120,7 @@ void can_router_test()
     // Setup
     static constexpr can::id_t id = 0x15;
     mock_can mock;
-    auto router = can_router::create(mock).value();
+    can_router router(mock);
 
     // Exercise
     auto callback_item = router.add_message_callback(id);
@@ -144,7 +129,7 @@ void can_router_test()
     expect(that % id == callback_item.get().id);
     expect(that % 1 == router.handlers().size());
 
-    [[maybe_unused]] const auto& iterator = std::find_if(
+    const auto& iterator = std::find_if(
       router.handlers().begin(),
       router.handlers().cend(),
       [](const can_router::route& p_route) { return p_route.id == id; });
@@ -160,19 +145,18 @@ void can_router_test()
       .length = 3,
     };
     mock_can mock;
-    auto router = can_router::create(mock).value();
+    can_router router(mock);
     int counter = 0;
     can::message_t actual{};
 
     // Exercise
     auto callback_item = router.add_message_callback(
-      id,
-      [&counter, &actual]([[maybe_unused]] const can::message_t& p_message) {
+      id, [&counter, &actual](const can::message_t& p_message) {
         counter++;
         actual = p_message;
       });
 
-    [[maybe_unused]] const auto& iterator = std::find_if(
+    const auto& iterator = std::find_if(
       router.handlers().begin(),
       router.handlers().cend(),
       [](const can_router::route& p_route) { return p_route.id == id; });
@@ -190,7 +174,7 @@ void can_router_test()
   "can_router::add_message_callback(id, callback)"_test = []() {
     // Setup
     mock_can mock;
-    auto router = can_router::create(mock).value();
+    can_router router(mock);
     int counter1 = 0;
     int counter2 = 0;
     int counter3 = 0;
@@ -276,15 +260,14 @@ void can_router_test()
     // Setup
     mock_can mock;
     {
-      auto router = can_router::create(mock);
+      can_router router(mock);
       // m_on_receive_call_count = 1 on construction
-      // m_on_receive_call_count = 2 on move
-      expect(that % 2 == mock.m_on_receive_call_count);
+      expect(that % 1 == mock.m_on_receive_call_count);
       // Exercise: end of scope calls destructor
     }
 
     // Verify
-    expect(that % 3 == mock.m_on_receive_call_count);
+    expect(that % 2 == mock.m_on_receive_call_count);
   };
 
   "can_router::can_router(&&) move constructor"_test = []() {
@@ -307,7 +290,7 @@ void can_router_test()
   "can_router::add_message_callback(id, callback) with move"_test = []() {
     // Setup
     mock_can mock;
-    auto to_be_moved_router = can_router::create(mock).value();
+    can_router to_be_moved_router(mock);
     auto router = std::move(to_be_moved_router);
     int counter1 = 0;
     int counter2 = 0;
