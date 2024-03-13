@@ -38,8 +38,6 @@ public:
 
   using route_item = static_list<route>::item;
 
-  static result<can_router> create(hal::can& p_can);
-
   /**
    * @brief Construct a new can message router
    *
