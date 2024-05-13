@@ -26,7 +26,7 @@ class libhal_canrouter_conan(ConanFile):
     topics = ("can", "canrouter", "libhal", "driver")
     settings = "compiler", "build_type", "os", "arch"
 
-    python_requires = "libhal-bootstrap/[^1.0.0]"
+    python_requires = "libhal-bootstrap/[^2.0.0]"
     python_requires_extend = "libhal-bootstrap.library"
 
     def requirements(self):
