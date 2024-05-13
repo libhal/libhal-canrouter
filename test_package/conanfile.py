@@ -23,4 +23,4 @@ class TestPackageConan(ConanFile):
 
     def requirements(self):
         self.requires(self.tested_reference_str)
-        self.test_requires("libhal-mock/[^3.0.0]")
+        self.test_requires("libhal-mock/[^4.0.0]")
