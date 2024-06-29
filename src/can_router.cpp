@@ -109,7 +109,7 @@ static_list<can_router::route>::item can_router::add_message_callback(
  *
  * @return const auto& map of all of the can message handlers.
  */
-const static_list<can_router::route>& can_router::handlers()
+static_list<can_router::route> const& can_router::handlers()
 {
   return m_handlers;
 }
@@ -122,7 +122,7 @@ const static_list<can_router::route>& can_router::handlers()
  *
  * @param p_message - message received from the bus
  */
-void can_router::operator()(const can::message_t& p_message)
+void can_router::operator()(can::message_t const& p_message)
 {
   for (auto& list_handler : m_handlers) {
     if (p_message.id == list_handler.id) {
