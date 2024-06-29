@@ -26,7 +26,7 @@ class can_router
 {
 public:
   static constexpr auto noop =
-    []([[maybe_unused]] const can::message_t& p_message) {};
+    []([[maybe_unused]] can::message_t const& p_message) {};
 
   using message_handler = hal::callback<hal::can::handler>;
 
@@ -94,7 +94,7 @@ public:
    *
    * @return const auto& map of all of the can message handlers.
    */
-  [[nodiscard]] const static_list<route>& handlers();
+  [[nodiscard]] static_list<route> const& handlers();
 
   /**
    * @brief Message routing interrupt service handler
@@ -104,7 +104,7 @@ public:
    *
    * @param p_message - message received from the bus
    */
-  void operator()(const can::message_t& p_message);
+  void operator()(can::message_t const& p_message);
 
 private:
   static_list<route> m_handlers{};

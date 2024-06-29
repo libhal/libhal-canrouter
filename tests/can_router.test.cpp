@@ -35,7 +35,7 @@ public:
   bool m_noop_set = false;
 
 private:
-  void driver_configure(const settings& p_settings) override
+  void driver_configure(settings const& p_settings) override
   {
     m_settings = p_settings;
     if (m_return_error_status) {
@@ -47,7 +47,7 @@ private:
   {
   }
 
-  void driver_send(const message_t& p_message) override
+  void driver_send(message_t const& p_message) override
   {
     m_message = p_message;
     if (m_return_error_status) {
@@ -129,10 +129,10 @@ void can_router_test()
     expect(that % id == callback_item.get().id);
     expect(that % 1 == router.handlers().size());
 
-    const auto& iterator = std::find_if(
+    auto const& iterator = std::find_if(
       router.handlers().begin(),
       router.handlers().cend(),
-      [](const can_router::route& p_route) { return p_route.id == id; });
+      [](can_router::route const& p_route) { return p_route.id == id; });
     expect(iterator->id == callback_item.get().id);
   };
 
@@ -151,15 +151,15 @@ void can_router_test()
 
     // Exercise
     auto callback_item = router.add_message_callback(
-      id, [&counter, &actual](const can::message_t& p_message) {
+      id, [&counter, &actual](can::message_t const& p_message) {
         counter++;
         actual = p_message;
       });
 
-    const auto& iterator = std::find_if(
+    auto const& iterator = std::find_if(
       router.handlers().begin(),
       router.handlers().cend(),
-      [](const can_router::route& p_route) { return p_route.id == id; });
+      [](can_router::route const& p_route) { return p_route.id == id; });
 
     iterator->handler(expected);
 
@@ -199,19 +199,19 @@ void can_router_test()
     can::message_t actual3{};
 
     auto message_handler1 = router.add_message_callback(
-      expected1.id, [&counter1, &actual1](const can::message_t& p_message) {
+      expected1.id, [&counter1, &actual1](can::message_t const& p_message) {
         counter1++;
         actual1 = p_message;
       });
 
     auto message_handler2 = router.add_message_callback(
-      expected2.id, [&counter2, &actual2](const can::message_t& p_message) {
+      expected2.id, [&counter2, &actual2](can::message_t const& p_message) {
         counter2++;
         actual2 = p_message;
       });
 
     auto message_handler3 = router.add_message_callback(
-      expected3.id, [&counter3, &actual3](const can::message_t& p_message) {
+      expected3.id, [&counter3, &actual3](can::message_t const& p_message) {
         counter3++;
         actual3 = p_message;
       });
@@ -316,19 +316,19 @@ void can_router_test()
     can::message_t actual3{};
 
     auto message_handler1 = router.add_message_callback(
-      expected1.id, [&counter1, &actual1](const can::message_t& p_message) {
+      expected1.id, [&counter1, &actual1](can::message_t const& p_message) {
         counter1++;
         actual1 = p_message;
       });
 
     auto message_handler2 = router.add_message_callback(
-      expected2.id, [&counter2, &actual2](const can::message_t& p_message) {
+      expected2.id, [&counter2, &actual2](can::message_t const& p_message) {
         counter2++;
         actual2 = p_message;
       });
 
     auto message_handler3 = router.add_message_callback(
-      expected3.id, [&counter3, &actual3](const can::message_t& p_message) {
+      expected3.id, [&counter3, &actual3](can::message_t const& p_message) {
         counter3++;
         actual3 = p_message;
       });
